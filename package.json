@@ -9,8 +9,7 @@
     "lint": "bunx eslint .",
     "lint:fix": "bunx eslint --fix .",
     "set-posts": "bunx tsx src/set-posts.ts",
-    "set-labels": "bunx tsx src/set-labels.ts",
-    "prepare": "bunx husky install"
+    "set-labels": "bunx tsx src/set-labels.ts"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"
