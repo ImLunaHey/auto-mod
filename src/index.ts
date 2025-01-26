@@ -26,9 +26,10 @@ const HOST = process.env.HOST ?? '127.0.0.1';
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4100;
 const FIREHOSE_URL = process.env.FIREHOSE_URL ?? 'wss://jetstream.atproto.tools/subscribe';
 const CURSOR_UPDATE_INTERVAL = process.env.CURSOR_UPDATE_INTERVAL ? Number(process.env.CURSOR_UPDATE_INTERVAL) : 60000;
-const CURSOR_FILE = 'cursor.txt';
+const CURSOR_FILE = process.env.CURSOR_FILE ?? 'cursor.txt';
+const DB_PATH = process.env.DB_PATH ?? 'labels.db';
 
-const labelerServer = new LabelerServer({ did: DID, signingKey: SIGNING_KEY });
+const labelerServer = new LabelerServer({ did: DID, signingKey: SIGNING_KEY, dbPath: DB_PATH });
 
 let cursor = 0;
 let cursorUpdateInterval: NodeJS.Timeout;
