@@ -40,14 +40,14 @@ function epochUsToDateTime(cursor: number): string {
 
 // Load cursor from file or set to current timestamp if missing
 try {
-  logger.info('Trying to read cursor from cursor.txt...');
-  cursor = Number(fs.readFileSync('cursor.txt', 'utf8'));
+  logger.info(`Trying to read cursor from ${CURSOR_FILE}...`);
+  cursor = Number(fs.readFileSync(CURSOR_FILE, 'utf8'));
   logger.info(`Cursor found: ${cursor} (${epochUsToDateTime(cursor)})`);
 } catch (error) {
   if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
     cursor = Math.floor(Date.now() * 1000);
-    logger.info(`Cursor not found in cursor.txt, setting cursor to: ${cursor} (${epochUsToDateTime(cursor)})`);
-    fs.writeFileSync('cursor.txt', cursor.toString(), 'utf8');
+    logger.info(`Cursor not found in ${CURSOR_FILE}, setting cursor to: ${cursor} (${epochUsToDateTime(cursor)})`);
+    fs.writeFileSync(CURSOR_FILE, cursor.toString(), 'utf8');
   } else {
     logger.error(error);
     process.exit(1);
@@ -67,7 +67,7 @@ jetstream.on('open', () => {
   cursorUpdateInterval = setInterval(() => {
     if (jetstream.cursor) {
       logger.info(`Cursor updated to: ${jetstream.cursor} (${epochUsToDateTime(jetstream.cursor)})`);
-      fs.writeFile('cursor.txt', jetstream.cursor.toString(), (err) => {
+      fs.writeFile(CURSOR_FILE, jetstream.cursor.toString(), (err) => {
         if (err) logger.error(err);
       });
     }
@@ -102,6 +102,7 @@ jetstream.onCreate('app.bsky.feed.post', (event) => {
   try {
     labelerServer.createLabel({
       uri,
+      cid: event.commit.cid,
       val: 'no-alt-text',
     });
     console.log(`Label "no alt text" added to ${uri}`);
