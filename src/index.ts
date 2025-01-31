@@ -103,6 +103,7 @@ jetstream.onCreate('app.bsky.feed.post', (event) => {
     labelerServer.createLabel({
       uri,
       cid: event.commit.cid,
+      neg: false,
       val: 'no-alt-text',
     });
     console.log(`Label "no alt text" added to ${uri}`);
